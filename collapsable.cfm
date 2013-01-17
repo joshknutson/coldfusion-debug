@@ -225,25 +225,25 @@ h4.cfdebugqueryparam{font-weight:bold; padding-left:20px}
 ul.cfdebugqueryparams{margin:0; padding:0; padding-left:35px}
 ul.cfdebugqueryparams li{list-style:none; padding:2px 0}
 ul.cfdebugqueryparams li span{color:blue}
-.cfdebug code, .cfdebug pre, td.cfdebug, pre.cfdebugquery, #CFDscope pre{font-family:Arial,sans-serif; line-height:1.5em}
+.cfdebug code, .cfdebug pre, td.cfdebug, pre.cfdebugquery, #CFDscope pre{font-family:Consolas,Arial,sans-serif; line-height:1.5em}
 .CFDdebugToolbar{padding:.5em; margin:0}
 .CFDdebugButton{outline:0; margin:0 4px 0 0; padding:.4em 1em; text-decoration:none !important; cursor:pointer; position:relative; text-align:center; zoom:1}
 .cfdTextRight{text-align:right}
 .cfdTextCenter{text-align:center}
 .cfdTextLeft{text-align:left}
 .cfdRetKey{text-transform:lowercase}
-.cfdRetVal{white-space:nowrap;         overflow:hidden;         text-overflow:ellipsis;         -o-text-overflow:ellipsis}
+.cfdRetVal{white-space:nowrap;}
 .CFDdebugTables tr:nth-child(even){background-color:#EFF6FF}
 .CFDdebugTables tr:nth-child(even):hover{background-color:#FEFFAF}
-span.CFDdebugLoader{background:url(http://coldfusion-debug.googlecode.com/svn/trunk/assets/images/loading.gif) no-repeat; padding-left:20px}
+span.CFDdebugLoader{background:url(//raw.github.com/joshknutson/coldfusion-debug/master/assets/images/loading.gif) no-repeat; padding-left:20px}
 @media print {div#CFDdebugPanel{display:none;}}
 </style>
 <script type="text/javascript">
 function CFDtoggle(divid){if(document.getElementById(divid).className=="CFDdebugContent ui-widget-content"){document.getElementById(divid).className="CFDdebugContentView ui-widget-content";setCookie(divid,1);}else{document.getElementById(divid).className="CFDdebugContent ui-widget-content";setCookie(divid,0);}}
-function setCookie(c_name,value){var expiredays=40;var exdate=new Date();exdate.setDate(exdate.getDate()+expiredays);document.cookie=c_name+"="+escape(value)+((expiredays==null)?"":";expires="+exdate.toGMTString());}
+function setCookie(c_name,value){var expiredays=30;var exdate=new Date();exdate.setDate(exdate.getDate()+expiredays);document.cookie=c_name+"="+escape(value)+((expiredays==null)?"":";expires="+exdate.toGMTString());}
 function addState(){var lis=document.getElementById("CFDdebugPanel").getElementsByTagName("H3");for(var i=0;i<lis.length;i++){lis[i].onmouseover=function(){this.className+=" cfd-default-highlight ui-state-highlight";};lis[i].onmouseout=function(){this.className=this.className.replace(new RegExp("cfd-default-highlight\\b"),"").replace(new RegExp("ui-state-highlight\\b"),"");}};}
 function addLoadEvent(func){var oldonload=window.onload;if(typeof window.onload!='function'){window.onload=func;}else{window.onload=function(){if(oldonload){oldonload();}func();}}};addLoadEvent(addState);
-try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').live('click',function(event){var loadingText = '<span class="CFDdebugLoader">Loading..</span>';jQuery('#reloadJax').html(loadingText);jQuery.get("<cfoutput>#currentaddress#</cfoutput>", function(data){ jQuery('#reloadJax').text('AJAX Reinitialize');});event.preventDefault();});function addReload(){	var vhtml = '<a href="<cfoutput>#currentaddress#</cfoutput>"  class="CFDdebugButton ui-state-default ui-corner-all" title="AJAX Reinitialize" id="reloadJax">AJAX Reinitialize</a>';jQuery('#jaxReload').html(vhtml)};addLoadEvent(addReload);}}catch(err){}
+try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').on('click',function(event){var loadingText = '<span class="CFDdebugLoader">Loading..</span>';jQuery('#reloadJax').html(loadingText);jQuery.get("<cfoutput>#currentaddress#</cfoutput>", function(data){ jQuery('#reloadJax').text('AJAX Reinitialize');});event.preventDefault();});function addReload(){	var vhtml = '<a href="<cfoutput>#currentaddress#</cfoutput>"  class="CFDdebugButton ui-state-default ui-corner-all" title="AJAX Reinitialize" id="reloadJax">AJAX Reinitialize</a>';jQuery('#jaxReload').html(vhtml)};addLoadEvent(addReload);}}catch(err){}
 </script>
 <div id="CFDdebugPanel">
 <cfif bGeneral>
