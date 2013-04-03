@@ -205,7 +205,7 @@
 <style>
 div#CFDdebugPanel{font-family:Arial,Helvetica,sans-serif; clear:both; font-size:11px; font-weight:normal; color:#000; background-color:#eee; text-align:left; margin-top:40px; padding:0}
 .cfd-default-header{font-size:13px; font-weight:bold; color:#fff; background-color:#134A7A; padding:5px; cursor:pointer; border:1px outset #eee; margin:0;transition:background-color 250ms linear;}
-.cfd-default-highlight{background-color:#B9D3FB; color:#000;cursor:pointer}
+.cfd-default-header:hover,.cfd-default-highlight{background-color:#B9D3FB; color:#000;cursor:pointer}
 .CFDtemplate_overage{font-weight:bold; color:#C00}
 .CFDdebugContent{display:none}
 .CFDdebugContentView{padding:5px; display:block; margin:0;}
