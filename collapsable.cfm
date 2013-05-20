@@ -204,7 +204,7 @@
 <cfsetting enablecfoutputonly="no">
 <style>
 div#CFDdebugPanel{font-family:Arial,Helvetica,sans-serif; clear:both; font-size:11px; font-weight:normal; color:#000; background-color:#eee; text-align:left; margin-top:40px; padding:0}
-.cfd-default-header{font-size:13px; font-weight:bold; color:#fff; background-color:#134A7A; padding:5px; cursor:pointer; border:1px outset #eee; margin:0;transition:background-color 250ms linear;}
+.cfd-default-header{font-size:13px;line-height:16px; font-weight:bold; color:#fff; background-color:#134A7A; padding:5px; cursor:pointer; border:1px outset #eee; margin:0;transition:background-color 250ms linear;}
 .cfd-default-header:hover,.cfd-default-highlight{background-color:#B9D3FB; color:#000;cursor:pointer}
 .CFDtemplate_overage{font-weight:bold; color:#C00}
 .CFDdebugContent{display:none}
@@ -647,7 +647,7 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 		<h3 class="cfd-default-header ui-widget-header" onclick="CFDtoggle('CFDsql');">&gt; SQL Queries</h3>
 		<div class="CFDdebugContent<cfif structkeyexists(cookie,"CFDsql") and cookie.CFDsql>View</cfif> ui-widget-content" id="CFDsql">
 		<cfloop query="cfdebug_queries">
-			<strong>#cfdebug_queries.name#</strong> (Datasource=#cfdebug_queries.datasource#, <span<cfif cfdebug_queries.executiontime gt cfdebugger.settings.template_highlight_minimum> class="CFDtemplate_overage" </cfif>>Time=#Max(cfdebug_queries.executionTime, 0)#ms</span><cfif IsDefined("cfdebug_queries.rowcount") AND IsNumeric(cfdebug_queries.rowcount)>, Records=#Max(cfdebug_queries.rowcount, 0)#<cfelseif IsDefined("cfdebug_queries.result.recordCount")>, Records=#cfdebug_queries.result.recordCount#</cfif><cfif cfdebug_queries.cachedquery>, <span class="cfdebugcachedquery">Cached Query</span></cfif>) in #cfdebug_queries.template# @ #TimeFormat(cfdebug_queries.timestamp, "HH:mm:ss.SSS")#<br />
+			<strong>#cfdebug_queries.name#</strong><span>(Datasource=#cfdebug_queries.datasource#,</span> <span<cfif cfdebug_queries.executiontime gt cfdebugger.settings.template_highlight_minimum> class="CFDtemplate_overage" </cfif>>Time=#Max(cfdebug_queries.executionTime, 0)#ms</span><cfif IsDefined("cfdebug_queries.rowcount") AND IsNumeric(cfdebug_queries.rowcount)>, Records=#Max(cfdebug_queries.rowcount, 0)#<cfelseif IsDefined("cfdebug_queries.result.recordCount")>, Records=#cfdebug_queries.result.recordCount#</cfif><cfif cfdebug_queries.cachedquery>, <span class="cfdebugcachedquery">Cached Query</span></cfif>) in #cfdebug_queries.template# @ #TimeFormat(cfdebug_queries.timestamp, "HH:mm:ss.SSS")#<br />
 			<cfset theBody = cfdebug_queries.body>
 			<cfif arrayLen(cfdebug_queries.attributes) GT 0>
            		<cfloop from="1" to="#arrayLen(cfdebug_queries.attributes)#" index="i">
