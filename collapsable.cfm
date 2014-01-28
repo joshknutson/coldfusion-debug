@@ -207,8 +207,9 @@ div#CFDdebugPanel{font-family:Arial,Helvetica,sans-serif; clear:both; font-size:
 .cfd-default-header{font-size:13px;line-height:16px; font-weight:bold; color:#fff; background-color:#134A7A; padding:5px; cursor:pointer; border:1px outset #eee; margin:0;transition:background-color 250ms linear;}
 .cfd-default-header:hover,.cfd-default-highlight{background-color:#B9D3FB; color:#000;cursor:pointer}
 .CFDtemplate_overage{font-weight:bold; color:#C00}
-.CFDdebugContent{display:none}
-.CFDdebugContentView{padding:5px; display:block; margin:0;transition:all 1.0s ease-in-out;}
+.CFDdebugContent{transition:all 1.0s cubic-bezier(0, 1, 0.5, 1);margin:0;}
+.CFDdebugContent.closed{visibility: hidden;opacity: 0;height:0;overflow: hidden;}
+.CFDdebugContent.open{padding:5px; visibility:visible; opacity: 1;height:auto;}
 #CFDinfo label{font-weight:bold; float:left; width:140px; clear:left; height:20px}
 #CFDinfo div{clear:right; height:20px}
 .CFDrenderTime{margin-top:20px; margin-bottom:20px; font-weight:bold; font-style:italic}
@@ -231,16 +232,16 @@ ul.cfdebugqueryparams li span{color:blue}
 .cfdTextRight{text-align:right}
 .cfdTextCenter{text-align:center}
 .cfdTextLeft{text-align:left}
-.cfdRetKey{text-transform:lowercase;}
+.cfdRetKey{text-transform:lowercase;font-weight: 800}
 .cfdRetKey:after{ content: ":";}
-.cfdRetVal{white-space:nowrap;width: 100%; text-overflow: ellipsis;display:block;}
+.cfdRetVal{white-space:nowrap;width: 100%; text-overflow: ellipsis;display:block;max-width: 960px;overflow: hidden}
 .CFDdebugTables tr:nth-child(even){background-color:#EFF6FF}
 .CFDdebugTables tr:nth-child(even):hover{background-color:#FEFFAF}
 span.CFDdebugLoader{background:url(//raw.github.com/joshknutson/coldfusion-debug/master/assets/images/loading.gif) no-repeat; padding-left:20px}
 @media print {div#CFDdebugPanel{display:none;}}
 </style>
 <script>
-function CFDtoggle(divid){if(document.getElementById(divid).className=="CFDdebugContent ui-widget-content panel-body"){document.getElementById(divid).className="CFDdebugContentView ui-widget-content panel-body";setCookie(divid,1);}else{document.getElementById(divid).className="CFDdebugContent ui-widget-content panel-body";setCookie(divid,0);}}
+function CFDtoggle(divid){if(document.getElementById(divid).className=="CFDdebugContent closed ui-widget-content panel-body"){document.getElementById(divid).className="CFDdebugContent open ui-widget-content panel-body";setCookie(divid,1);}else{document.getElementById(divid).className="CFDdebugContent closed ui-widget-content panel-body";setCookie(divid,0);}}
 function setCookie(c_name,value){var expiredays=30;var exdate=new Date();exdate.setDate(exdate.getDate()+expiredays);document.cookie=c_name+"="+escape(value)+((expiredays==null)?"":";expires="+exdate.toGMTString());}
 function addState(){var lis=document.getElementById("CFDdebugPanel").getElementsByTagName("H3");for(var i=0;i<lis.length;i++){lis[i].onmouseover=function(){this.className+=" cfd-default-highlight ui-state-highlight";};lis[i].onmouseout=function(){this.className=this.className.replace(new RegExp("cfd-default-highlight\\b"),"").replace(new RegExp("ui-state-highlight\\b"),"");}};}
 function addLoadEvent(func){var oldonload=window.onload;if(typeof window.onload!='function'){window.onload=func;}else{window.onload=function(){if(oldonload){oldonload();}func();}}};addLoadEvent(addState);
@@ -267,12 +268,12 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 			      	FROM qEvents
 			      	WHERE type = 'ExecutionTime'
 			  	</cfquery>
-			  	<div class="CFDdebugContentView  ui-widget-content panel-body">
+			  	<div class="CFDdebugContent open ui-widget-content panel-body">
 	                <div><em>#totalQueryTime# ms : TOTAL QUERY TIME <cfif totalQueryTime gt 0>(#lsNumberFormat(totalQueryTime/cfdebug_execution.executiontime*100,"99.99")# % of Total)</cfif></em></div>
 	           	</div>
 			</cfif>
 		</div>
-		<div class="CFDdebugContent<cfif structkeyexists(cookie,"CFDinfo") and cookie.CFDinfo>View</cfif> ui-widget-content panel-body" id="CFDinfo">
+		<div class="CFDdebugContent <cfif structkeyexists(cookie,"CFDinfo") and cookie.CFDinfo>open<cfelse>closed</cfif> ui-widget-content panel-body" id="CFDinfo">
 			<label title="#server.coldfusion.productname#">#server.coldfusion.productname#</label>
 			<div>#server.coldfusion.productversion#</div>
 			<label title="Template"> Template </label>
@@ -325,7 +326,7 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
         <cfoutput>
 			<div class="ui-widget panel panel-info">
        		<h3 class="cfd-default-header ui-widget-header panel-heading" onclick="CFDtoggle('CFDexecution')">&##9654; Execution Time</h3>
-			<div class="CFDdebugContent<cfif structkeyexists(cookie,"CFDexecution") and cookie.CFDexecution>View</cfif> ui-widget-content panel-body" id="CFDexecution">
+			<div class="CFDdebugContent <cfif structkeyexists(cookie,"CFDexecution") and cookie.CFDexecution>open<cfelse>closed</cfif> ui-widget-content panel-body" id="CFDexecution">
         </cfoutput>
 
         <cfif cfdebugger.settings.template_mode EQ "tree">
@@ -476,7 +477,7 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 	                        <cfset templateAverageTime = Round(totalExecutionTime / instances)>
 
 	                        <cfif template EQ ExpandPath(cgi.script_name)>
-	                            <cfset templateOutput = "<img src='#getpageContext().getRequest().getContextPath()#/CFIDE/debug/images/topdoc.gif' alt='top level' border='0'> " &
+	                            <cfset templateOutput = "<img src='#getpageContext().getRequest().getContextPath()#/CFIDE/debug/images/topdoc.gif' height='13px' width='11px' alt='top level' border='0'> " &
 	                                "<strong>" & template & "</strong>">
 								 <cfif templateAverageTime GT cfdebugger.settings.template_highlight_minimum>
 	                                <cfset templateOutput = "<span class='CFDtemplate_overage'>" & template & "</span>">
@@ -532,11 +533,11 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 					</tfoot>
             	</table>
 				</div>
-			</div>
 				</cfoutput>
         	<cfcatch type="Any"></cfcatch>
         	</cftry>
         </cfif> <!--- template_mode = summary--->
+		</div>
     <cfelse>
 	<div class="ui-widget panel panel-info">
         <h3 class="cfd-default-header ui-widget-header panel-heading" onclick="CFDtoggle('CFDexecution')">&##9654; Execution Time</h3>
@@ -585,7 +586,7 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 <cfoutput>
 <div class="ui-widget panel panel-info">
 	<h3 class="cfd-default-header ui-widget-header panel-heading" onclick="CFDtoggle('CFDcfc')">&##9654; CFC Data</h3>
-	<div class="CFDdebugContent<cfif structkeyexists(cookie,"CFDcfc") and cookie.CFDcfc>View</cfif> ui-widget-content panel-body" id="CFDcfc">
+	<div class="CFDdebugContent <cfif structkeyexists(cookie,"CFDcfc") and cookie.CFDcfc>open<cfelse>closed</cfif> ui-widget-content panel-body" id="CFDcfc">
 		<table class="CFDdebugTables">
 		<thead>
 			<tr>
@@ -621,7 +622,7 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 <cfoutput>
 <div class="ui-widget panel panel-info">
 	<h3 class="cfd-default-header ui-widget-header panel-heading" onclick="CFDtoggle('CFDexceptions');">&##9654; Exceptions</h3>
-	<div class="CFDdebugContent<cfif structkeyexists(cookie,"CFDexceptions") and cookie.CFDexceptions>View</cfif> ui-widget-content panel-body" id="CFDexceptions">
+	<div class="CFDdebugContent <cfif structkeyexists(cookie,"CFDexceptions") and cookie.CFDexceptions>open<cfelse>closed</cfif> ui-widget-content panel-body" id="CFDexceptions">
 	<cfloop query="cfdebug_ex">
 	    <div class="cfdebug">#TimeFormat(cfdebug_ex.timestamp, "HH:mm:ss.SSS")# - #cfdebug_ex.name# <cfif FindNoCase("Exception", cfdebug_ex.name) EQ 0>Exception</cfif> - in #cfdebug_ex.template# : line #cfdebug_ex.line#</div>
 	    <cfif IsDefined("cfdebug_ex.message") AND Len(Trim(cfdebug_ex.message)) GT 0>
@@ -645,7 +646,7 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 	<cftry>
 	<div class="ui-widget panel panel-info">
 		<h3 class="cfd-default-header ui-widget-header panel-heading" onclick="CFDtoggle('CFDsql');">&##9654; SQL Queries</h3>
-		<div class="CFDdebugContent<cfif structkeyexists(cookie,"CFDsql") and cookie.CFDsql>View</cfif> ui-widget-content panel-body" id="CFDsql">
+		<div class="CFDdebugContent <cfif structkeyexists(cookie,"CFDsql") and cookie.CFDsql>open<cfelse>closed</cfif> ui-widget-content panel-body" id="CFDsql">
 		<cfloop query="cfdebug_queries">
 			<strong>#cfdebug_queries.name#</strong><span>(Datasource=#cfdebug_queries.datasource#,</span> <span<cfif cfdebug_queries.executiontime gt cfdebugger.settings.template_highlight_minimum> class="CFDtemplate_overage" </cfif>>Time=#Max(cfdebug_queries.executionTime, 0)#ms</span><cfif IsDefined("cfdebug_queries.rowcount") AND IsNumeric(cfdebug_queries.rowcount)>, Records=#Max(cfdebug_queries.rowcount, 0)#<cfelseif IsDefined("cfdebug_queries.result.recordCount")>, Records=#cfdebug_queries.result.recordCount#</cfif><cfif cfdebug_queries.cachedquery>, <span class="cfdebugcachedquery">Cached Query</span></cfif>) in #cfdebug_queries.template# @ #TimeFormat(cfdebug_queries.timestamp, "HH:mm:ss.SSS")#<br />
 			<cfset theBody = cfdebug_queries.body>
@@ -720,7 +721,7 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 <cftry>
 <div class="ui-widget panel panel-info">
 <h3 class="cfd-default-header ui-widget-header panel-heading" onclick="CFDtoggle('CFDprocedures')">&##9654; Stored Procedures</h3>
-<div class="CFDdebugContent<cfif structkeyexists(cookie,"CFDprocedures") and cookie.CFDprocedures>View</cfif> ui-widget-content panel-body" id="CFDprocedures">
+<div class="CFDdebugContent <cfif structkeyexists(cookie,"CFDprocedures") and cookie.CFDprocedures>open<cfelse>closed</cfif> ui-widget-content panel-body" id="CFDprocedures">
 <cfloop query="cfdebug_storedproc">
 <!--- Output stored procedure details, remember, include result (output params) and attributes (input params) columns --->
     <fieldset>
@@ -822,7 +823,7 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 <cfif bFoundScopeVars>
 <div class="ui-widget panel panel-info">
 <h3 class="cfd-default-header ui-widget-header panel-heading" onclick="CFDtoggle('CFDscope')">&##9654; Scope Variables</h3>
-<div class="CFDdebugContent<cfif structkeyexists(cookie,"CFDscope") and cookie.CFDscope>View</cfif> ui-widget-content panel-body" id="CFDscope">
+<div class="CFDdebugContent <cfif structkeyexists(cookie,"CFDscope") and cookie.CFDscope>open<cfelse>closed</cfif> ui-widget-content panel-body" id="CFDscope">
 <cftry>
 <cfif IsDefined("APPLICATION") AND IsStruct(APPLICATION) AND StructCount(APPLICATION) GT 0 AND cfdebugger.check("ApplicationVar")>
 <h4 class="cfdebugvariable">Application Variables:</h4>
@@ -953,9 +954,9 @@ function drawTree(tree, indent, id, highlightThreshold) {
 	    // top level nodes (application.cfm,cgi.script_name,etc) have a -1 parent line number
 	    if(tree[id].line EQ -1) {
 			if( Tree[id].duration GT highlightThreshold ){
-	        	writeoutput( "<img src='#getpageContext().getRequest().getContextPath()#/CFIDE/debug/images/topdoc.gif' alt='top level' border='0'> " & "<span class='CFDCFDtemplate_overage'><strong>(#Tree[id].duration#ms) " & Tree[id].template & "</strong></span><br />" );
+	        	writeoutput( "<img src='#getpageContext().getRequest().getContextPath()#/CFIDE/debug/images/topdoc.gif' height='13px' width='11px' alt='top level' border='0'> " & "<span class='CFDCFDtemplate_overage'><strong>(#Tree[id].duration#ms) " & Tree[id].template & "</strong></span><br />" );
 			}else{
-				writeoutput( "<img src='#getpageContext().getRequest().getContextPath()#/CFIDE/debug/images/topdoc.gif' alt='top level' border='0'> " & "<span class='template'><strong>(#Tree[id].duration#ms) " & Tree[id].template & "</strong></span><br />" );
+				writeoutput( "<img src='#getpageContext().getRequest().getContextPath()#/CFIDE/debug/images/topdoc.gif' height='13px' width='11px' alt='top level' border='0'> " & "<span class='template'><strong>(#Tree[id].duration#ms) " & Tree[id].template & "</strong></span><br />" );
 			}
 	    } else {
 	        if( Tree[id].duration GT highlightThreshold ) {
