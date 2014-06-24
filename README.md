@@ -15,6 +15,7 @@ Note some people can't find there debug output area, so here is a list of possib
   * C:\ColdFusion8\wwwroot\WEB-INF
   * C:\ColdFusion9\wwwroot\WEB-INF\
   * C:\ColdFusion10\cfusion\wwwroot\WEB-INF\
+  * C:\ColdFusion11\cfusion\wwwroot\WEB-INF\
   
   
   [![githalytics.com alpha](https://cruel-carlota.pagodabox.com/e29d0990f93146ef2ab6e4798c8a24ff "githalytics.com")](http://githalytics.com/joshknutson/coldfusion-debug)
