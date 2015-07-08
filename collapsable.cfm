@@ -643,12 +643,13 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 <!--- SQL Queries --->
 <cfoutput>
 <cfif bFoundSQLQueries>
-	<cftry>
+	<cfset queryKeys = {} />
 	<div class="ui-widget panel panel-info">
 		<h3 class="cfd-default-header ui-widget-header panel-heading" onclick="CFDtoggle('CFDsql');">&##9654; SQL Queries</h3>
 		<div class="CFDdebugContent <cfif structkeyexists(cookie,"CFDsql") and cookie.CFDsql>open<cfelse>closed</cfif> ui-widget-content panel-body" id="CFDsql">
 		<cfloop query="cfdebug_queries">
-			<strong>#cfdebug_queries.name#</strong><span>(Datasource=#cfdebug_queries.datasource#,</span> <span<cfif cfdebug_queries.executiontime gt cfdebugger.settings.template_highlight_minimum> class="CFDtemplate_overage" </cfif>>Time=#Max(cfdebug_queries.executionTime, 0)#ms</span><cfif IsDefined("cfdebug_queries.rowcount") AND IsNumeric(cfdebug_queries.rowcount)>, Records=#Max(cfdebug_queries.rowcount, 0)#<cfelseif IsDefined("cfdebug_queries.result.recordCount")>, Records=#cfdebug_queries.result.recordCount#</cfif><cfif cfdebug_queries.cachedquery>, <span class="cfdebugcachedquery">Cached Query</span></cfif>) in #cfdebug_queries.template# @ #TimeFormat(cfdebug_queries.timestamp, "HH:mm:ss.SSS")#<br />
+		<cftry>
+			<strong>#cfdebug_queries.name#</strong><span>(Datasource=#cfdebug_queries.datasource#,</span> <span<cfif cfdebug_queries.executiontime gt cfdebugger.settings.template_highlight_minimum> class="CFDtemplate_overage" </cfif>>Time=#Max(cfdebug_queries.executionTime, 0)#ms</span><cfif IsDefined("cfdebug_queries.rowcount") AND IsNumeric(cfdebug_queries.rowcount)>, Records=#Max(cfdebug_queries.rowcount, 0)#<cfelseif IsDefined("cfdebug_queries.result.recordCount")>, Records=#cfdebug_queries.result.recordCount#</cfif><cfif cfdebug_queries.cachedquery>, <span class="cfdebugcachedquery">Cached Query</span></cfif>) in #cfdebug_queries.template# @ #TimeFormat(cfdebug_queries.timestamp, "HH:mm:ss.SSS")#
 			<cfset theBody = cfdebug_queries.body>
 			<cfif arrayLen(cfdebug_queries.attributes) GT 0>
            		<cfloop from="1" to="#arrayLen(cfdebug_queries.attributes)#" index="i">
@@ -689,31 +690,68 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 			<!--- replace tabs --->
 			<cfset newBody = replace(newBody,chr(9),"","all") />
 
-			<pre class="cfdebugquery">#newBody#</pre>
-
+			<cfset cfdebugqueryparams = [] />
+			<cfsavecontent variable="cfdebugqueryparamsList">
 			<cfif arrayLen(cfdebug_queries.attributes) GT 0>
 			    <h4 class="cfdebugqueryparam">Query Parameter Value(s)</h4>
 			    <ul class="cfdebugqueryparams">
 			    <cfloop index="x" from="1" to="#arrayLen(cfdebug_queries.attributes)#">
 	        		<cfset thisParam = #cfdebug_queries.attributes[cfdebug_queries.currentRow][x]#>
-	        		<cfset class="" />
+	        		<cfset classes=[] />
 	        		<cfif x eq 1>
-	        			<cfset class="first">
-	        		<cfelseif x eq arrayLen(cfdebug_queries.attributes)>
-	        			<cfset class="last">
+	        			<cfset arrayAppend(classes,"first") />
 	        		</cfif>
-			        <li class="#class#">Parameter ###x#<cfif StructKeyExists(thisParam, "sqlType")>(#thisParam.sqlType#)</cfif> = <cfif StructKeyExists(thisParam, "value")><span>#htmleditformat(thisParam.value)#</span></cfif></li>
+	        		<cfif x eq arrayLen(cfdebug_queries.attributes)>
+	        			<cfset arrayAppend(classes,"last") />
+	        		</cfif>
+			        <li class="#arraytoList(classes," ")#">Parameter ###x#<cfif StructKeyExists(thisParam, "sqlType")>(#thisParam.sqlType#)</cfif> = <cfif StructKeyExists(thisParam, "value")><span>#htmleditformat(thisParam.value)#</span> <cfset arrayAppend(cfdebugqueryparams,htmleditformat(thisParam.value)) />  </cfif></li>
+
 			    </cfloop>
 			   </ul>
 			    <br />
 			</cfif>
+			</cfsavecontent>
+
+			<cfset queryKey = "#cfdebug_queries.name#_#arraytoList(cfdebugqueryparams,"_")#" />
+			<span>key:<strong></strong>#queryKey#</span><br />
+			<cfif structKeyExists(queryKeys,queryKey)>
+				<cfset queryKeys[queryKey] = queryKeys[queryKey]+1 />
+			<cfelse>
+				<cfset queryKeys[queryKey] = 1 />
+			</cfif>
+
+			<pre class="cfdebugquery">#newBody#</pre>
+
+			#trim(cfdebugqueryparamsList)#
+
+			<cfcatch type="Any">
+				<!--- Error reporting query event --->
+				<pre class="cfdebugquery error">#cfcatch.message#</pre>
+			</cfcatch>
+		</cftry>
 		</cfloop>
+
+		<cfset queryDuplicates = [] />
+
+		<cfloop collection="#queryKeys#" item="q">
+			<cfif isNumeric(queryKeys[q]) and queryKeys[q] gt 1>
+				<cfset arrayAppend(queryDuplicates,q) />
+			</cfif>
+		</cfloop>
+
+		<cfif arraylen(queryDuplicates)>
+			<h4>Potential duplicate queries</h4>
+			<ul>
+			<cfloop from="1" to="#arraylen(queryDuplicates)#" index="i">
+				<cfset item = queryDuplicates[i] />
+				<li>#item#</li>
+			</cfloop>
+			</ul>
+		</cfif>
+
 		</div>
 	</div>
-	<cfcatch type="Any">
-		<!--- Error reporting query event --->
-	</cfcatch>
-</cftry>
+
 </cfif>
 
 <!--- Stored Procs --->
