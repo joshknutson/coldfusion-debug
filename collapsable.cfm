@@ -297,6 +297,8 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 
 <!--- Template Stack and Executions Times --->
 <cfif bFoundTemplates>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/sortable/0.6.0/js/sortable.min.js" defer></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sortable/0.6.0/css/sortable-theme-minimal.css" />
   	<!--- Total Execution Time of all top level pages --->
   	<cfquery dbType="query" name="cfdebug_execution" debug="false">
       	SELECT (endTime - startTime) AS executionTime
@@ -458,12 +460,12 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 	                order by totalExecutionTime DESC
                 </cfquery>
                 <cfoutput>
-                <table class="CFDdebugTables">
+                <table class="CFDdebugTables" data-sortable>
 					<caption class="cfdTextLeft"><span class="CFDtemplate_overage">red = over #cfdebugger.settings.template_highlight_minimum# ms average execution time</span></caption>
 					<thead>
 					  <tr>
-						<th width="13%">Total Time</th>
-						<th>Avg Time</td>
+						<th width="13%">Total Time (ms)</th>
+						<th>Avg Time (ms)</td>
 						<th>Count</th>
 						<th>Template</th>
 					</tr>
@@ -473,20 +475,20 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 					<tbody>
                     <cfoutput query="cfdebug_templates_summary">
                        <cfsilent>
-							 <cfset templateOutput = template>
+							 <cfset templateOutput = htmleditFormat(template)>
 	                        <cfset templateAverageTime = Round(totalExecutionTime / instances)>
 
 	                        <cfif template EQ ExpandPath(cgi.script_name)>
 	                            <cfset templateOutput = "<img src='#getpageContext().getRequest().getContextPath()#/CFIDE/debug/images/topdoc.gif' height='13px' width='11px' alt='top level' border='0'> " &
-	                                "<strong>" & template & "</strong>">
+	                                "<strong>" & htmleditFormat(template) & "</strong>">
 								 <cfif templateAverageTime GT cfdebugger.settings.template_highlight_minimum>
-	                                <cfset templateOutput = "<span class='CFDtemplate_overage'>" & template & "</span>">
+	                                <cfset templateOutput = "<span class='CFDtemplate_overage'>" & htmleditFormat(template) & "</span>">
 	                                <cfset templateAverageTime = "<span class='CFDtemplate_overage'>" & templateAverageTime & "</span>">
 									<cfset totalTime = "<span class='CFDtemplate_overage'>" & totalExecutionTime & "</span>">
 	                            </cfif>
 	                        <cfelse>
 	                            <cfif templateAverageTime GT cfdebugger.settings.template_highlight_minimum>
-	                                <cfset templateOutput = "<span class='CFDtemplate_overage'>" & template & "</span>">
+	                                <cfset templateOutput = "<span class='CFDtemplate_overage'>" & htmleditFormat(template) & "</span>">
 	                                <cfset templateAverageTime = "<span class='CFDtemplate_overage'>" & templateAverageTime & "</span>">
 									<cfset totalTime = "<span class='CFDtemplate_overage'>" & totalExecutionTime & "</span>">
 	                            </cfif>
@@ -494,14 +496,14 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 						</cfsilent>
                         <tr>
 							<cfif isDefined("totalTime") and len(trim(totalTime))>
-								<td class="cfdebug cfdTextRight">#totalTime# ms</td>
+								<td class="cfdebug cfdTextRight">#totalTime#</td>
 								<cfset totalTime = "">
 							<cfelse>
-    	                        <td class="cfdebug cfdTextRight">#totalExecutionTime# ms</td>
+    	                        <td class="cfdebug cfdTextRight">#totalExecutionTime#</td>
 							</cfif>
-                            <td class="cfdebug cfdTextRight">#templateAverageTime# ms</td>
+                            <td class="cfdebug cfdTextRight">#templateAverageTime#</td>
                             <td class="cfdebug cfdTextCenter">#instances#</td>
-                            <td class="cfdebug cfdTextLeft">#templateOutput#</td>
+                            <td class="cfdebug cfdTextLeft cfdTemplateOutput">#templateOutput#</td>
                         </tr>
                        </cfoutput>
 					</tbody>
@@ -540,7 +542,7 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 		</div>
     <cfelse>
 	<div class="ui-widget panel panel-info">
-        <h3 class="cfd-default-header ui-widget-header panel-heading" onclick="CFDtoggle('CFDexecution')">&##9654; Execution Time</h3>
+        <h3 class="cfd-default-header ui-widget-header panel-heading" onclick="CFDtoggle('CFDexecution')">&#9654; Execution Time</h3>
         <div class="ui-widget-content panel-body">No top level page was found.</div>
 	</div>
     </cfif> <!--- if top level templates are available --->
@@ -587,11 +589,11 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 <div class="ui-widget panel panel-info">
 	<h3 class="cfd-default-header ui-widget-header panel-heading" onclick="CFDtoggle('CFDcfc')">&##9654; CFC Data</h3>
 	<div class="CFDdebugContent <cfif structkeyexists(cookie,"CFDcfc") and cookie.CFDcfc>open<cfelse>closed</cfif> ui-widget-content panel-body" id="CFDcfc">
-		<table class="CFDdebugTables">
+		<table class="CFDdebugTables" data-sortable>
 		<thead>
 			<tr>
-				<th>Total Time</th>
-				<th>Avg Time</th>
+				<th>Total Time (ms)</th>
+				<th>Avg Time (ms)</th>
 				<th>Count</th>
 				<th>CFC</th>
 				<th>Method</th>
@@ -601,11 +603,11 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 		<cfloop item="cfc" collection="#cfcData#">
 			<cfloop item="method" collection="#cfcdata[cfc]#">
 			<tr>
-				<td class="cfdTextRight">#cfcdata[cfc][method].total# ms</td>
-				<td>#numberFormat(cfcdata[cfc][method].average,"00.00")# ms</td>
-				<td>#cfcdata[cfc][method].count#</td>
-				<td>#cfc#</td>
-				<td>#method#</td>
+				<td class="cfdTextRight cfdebug">#cfcdata[cfc][method].total#</td>
+				<td class="cfdebug">#numberFormat(cfcdata[cfc][method].average,"00.00")#</td>
+				<td class="cfdebug">#cfcdata[cfc][method].count#</td>
+				<td class="cfdebug">#cfc#</td>
+				<td class="cfdebug">#method#</td>
 			</tr>
 			</cfloop>
 		</cfloop>
