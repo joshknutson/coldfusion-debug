@@ -653,6 +653,7 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 		<cftry>
 			<strong>#cfdebug_queries.name#</strong><span>(Datasource=#cfdebug_queries.datasource#,</span> <span<cfif cfdebug_queries.executiontime gt cfdebugger.settings.template_highlight_minimum> class="CFDtemplate_overage" </cfif>>Time=#Max(cfdebug_queries.executionTime, 0)#ms</span><cfif IsDefined("cfdebug_queries.rowcount") AND IsNumeric(cfdebug_queries.rowcount)>, Records=#Max(cfdebug_queries.rowcount, 0)#<cfelseif IsDefined("cfdebug_queries.result.recordCount")>, Records=#cfdebug_queries.result.recordCount#</cfif><cfif cfdebug_queries.cachedquery>, <span class="cfdebugcachedquery">Cached Query</span></cfif>) in #cfdebug_queries.template# @ #TimeFormat(cfdebug_queries.timestamp, "HH:mm:ss.SSS")#
 			<cfset theBody = cfdebug_queries.body>
+
 			<cfif arrayLen(cfdebug_queries.attributes) GT 0>
            		<cfloop from="1" to="#arrayLen(cfdebug_queries.attributes)#" index="i">
            			<cfset stThisParam = cfdebug_queries.attributes[cfdebug_queries.currentRow][i]>
@@ -668,7 +669,7 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
            					</cfif>
            				</cfcase>
            				<cfdefaultcase>
-           					<cfset thisParam = "'#stThisParam.value#'">
+           					<cfset thisParam = "'#htmleditformat(stThisParam.value)#'">
            				</cfdefaultcase>
            			</cfswitch>
            			<cfset thisParam = '<span class="cfqueryparam">#thisParam#</span>'>
@@ -824,7 +825,7 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 <!--- :: CFTimer :: --->
 <cfif bFoundTimer>
 	<div class="ui-widget panel panel-info">
-		<h3 class="cfd-default-header ui-widget-header panel-heading" onclick="CFDtoggle('CFDtimer')">&gt;CFTimer Times</h3>
+		<h3 class="cfd-default-header ui-widget-header panel-heading" onclick="CFDtoggle('CFDtimer')">&##9654; CFTimer Times</h3>
 		<p class="cfdebug">
 		<cfloop query="cfdebug_timer">
 		    <cftry>
@@ -840,7 +841,7 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 <!--- Tracing --->
 <cfif bFoundTrace>
 	<div class="ui-widget panel panel-info">
-		<h3 class="cfd-default-header ui-widget-header panel-heading" onclick="CFDtoggle('CFDpoints')">&gt;Trace Points</h3>
+		<h3 class="cfd-default-header ui-widget-header panel-heading" onclick="CFDtoggle('CFDpoints')">&##9654; Trace Points</h3>
 		<p class="cfdebug">
 
 		<cfset firstTrace=true>
