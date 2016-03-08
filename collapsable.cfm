@@ -652,7 +652,7 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 		<cfloop query="cfdebug_queries">
 		<cftry>
 			<strong>#cfdebug_queries.name#</strong><span>(Datasource=#cfdebug_queries.datasource#,</span> <span<cfif cfdebug_queries.executiontime gt cfdebugger.settings.template_highlight_minimum> class="CFDtemplate_overage" </cfif>>Time=#Max(cfdebug_queries.executionTime, 0)#ms</span><cfif IsDefined("cfdebug_queries.rowcount") AND IsNumeric(cfdebug_queries.rowcount)>, Records=#Max(cfdebug_queries.rowcount, 0)#<cfelseif IsDefined("cfdebug_queries.result.recordCount")>, Records=#cfdebug_queries.result.recordCount#</cfif><cfif cfdebug_queries.cachedquery>, <span class="cfdebugcachedquery">Cached Query</span></cfif>) in #cfdebug_queries.template# @ #TimeFormat(cfdebug_queries.timestamp, "HH:mm:ss.SSS")#
-			<cfset theBody = cfdebug_queries.body>
+			<cfset theBody = htmleditformat(cfdebug_queries.body)>
 
 			<cfif arrayLen(cfdebug_queries.attributes) GT 0>
            		<cfloop from="1" to="#arrayLen(cfdebug_queries.attributes)#" index="i">
