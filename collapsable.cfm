@@ -826,6 +826,8 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 <cfif bFoundTimer>
 	<div class="ui-widget panel panel-info">
 		<h3 class="cfd-default-header ui-widget-header panel-heading" onclick="CFDtoggle('CFDtimer')">&##9654; CFTimer Times</h3>
+		<div class="CFDdebugContent <cfif structkeyexists(cookie,"CFDtimer") and cookie.CFDtimer>open<cfelse>closed</cfif> ui-widget-content panel-body" id="CFDtimer">
+
 		<p class="cfdebug">
 		<cfloop query="cfdebug_timer">
 		    <cftry>
@@ -835,6 +837,7 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 		    </cftry>
 		</cfloop>
 		</p>
+		</div>
 	</div>
 </cfif>
 
