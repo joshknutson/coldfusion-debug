@@ -247,7 +247,7 @@ function addState(){var lis=document.getElementById("CFDdebugPanel").getElements
 function addLoadEvent(func){var oldonload=window.onload;if(typeof window.onload!='function'){window.onload=func;}else{window.onload=function(){if(oldonload){oldonload();}func();}}};addLoadEvent(addState);
 try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',function(event){var loadingText = '<span class="CFDdebugLoader">Loading..</span>';jQuery('#reloadJax').html(loadingText);jQuery.get("<cfoutput>#currentaddress#</cfoutput>", function(data){ jQuery('#reloadJax').text('AJAX Reinitialize');});event.preventDefault();});function addReload(){	var vhtml = '<a href="<cfoutput>#currentaddress#</cfoutput>"  class="CFDdebugButton ui-state-default ui-corner-all" title="AJAX Reinitialize" id="reloadJax">AJAX Reinitialize</a>';jQuery('#jaxReload').html(vhtml)};addLoadEvent(addReload);}}catch(err){}
 </script>
-<div id="CFDdebugPanel">
+<div id="CFDdebugPanel" aria-hidden="true">
 <cfif bGeneral>
 <cfoutput>
 	<cftry>
@@ -651,7 +651,7 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 		<div class="CFDdebugContent <cfif structkeyexists(cookie,"CFDsql") and cookie.CFDsql>open<cfelse>closed</cfif> ui-widget-content panel-body" id="CFDsql">
 		<cfloop query="cfdebug_queries">
 		<cftry>
-			<strong>#cfdebug_queries.name#</strong><span>(Datasource=#cfdebug_queries.datasource#,</span> <span<cfif cfdebug_queries.executiontime gt cfdebugger.settings.template_highlight_minimum> class="CFDtemplate_overage" </cfif>>Time=#Max(cfdebug_queries.executionTime, 0)#ms</span><cfif IsDefined("cfdebug_queries.rowcount") AND IsNumeric(cfdebug_queries.rowcount)>, Records=#Max(cfdebug_queries.rowcount, 0)#<cfelseif IsDefined("cfdebug_queries.result.recordCount")>, Records=#cfdebug_queries.result.recordCount#</cfif><cfif cfdebug_queries.cachedquery>, <span class="cfdebugcachedquery">Cached Query</span></cfif>) in #cfdebug_queries.template# @ #TimeFormat(cfdebug_queries.timestamp, "HH:mm:ss.SSS")#
+			--<strong>#cfdebug_queries.name#</strong><span>(Datasource=#cfdebug_queries.datasource#,</span> <span<cfif cfdebug_queries.executiontime gt cfdebugger.settings.template_highlight_minimum> class="CFDtemplate_overage" </cfif>>Time=#Max(cfdebug_queries.executionTime, 0)#ms</span><cfif IsDefined("cfdebug_queries.rowcount") AND IsNumeric(cfdebug_queries.rowcount)>, Records=#Max(cfdebug_queries.rowcount, 0)#<cfelseif IsDefined("cfdebug_queries.result.recordCount")>, Records=#cfdebug_queries.result.recordCount#</cfif><cfif cfdebug_queries.cachedquery>, <span class="cfdebugcachedquery">Cached Query</span></cfif>) in #cfdebug_queries.template# @ #TimeFormat(cfdebug_queries.timestamp, "HH:mm:ss.SSS")#
 			<cfset theBody = htmleditformat(cfdebug_queries.body)>
 
 			<cfif arrayLen(cfdebug_queries.attributes) GT 0>
