@@ -669,7 +669,7 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
            					</cfif>
            				</cfcase>
            				<cfcase value="cf_sql_varbinary">
-           					<cfset thisParam = "'#tostring(stThisParam.value)#'">
+           					<cfset thisParam = "'#htmleditformat(tostring(stThisParam.value))#'">
            				</cfcase>
            				<cfdefaultcase>
            					<cfset thisParam = "'#htmleditformat(stThisParam.value)#'">
