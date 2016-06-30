@@ -668,6 +668,9 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
            						<cfset thisParam = "'0'">
            					</cfif>
            				</cfcase>
+           				<cfcase value="cf_sql_varbinary">
+           					<cfset thisParam = "'#tostring(stThisParam.value)#'">
+           				</cfcase>
            				<cfdefaultcase>
            					<cfset thisParam = "'#htmleditformat(stThisParam.value)#'">
            				</cfdefaultcase>
@@ -707,8 +710,7 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 	        		<cfif x eq arrayLen(cfdebug_queries.attributes)>
 	        			<cfset arrayAppend(classes,"last") />
 	        		</cfif>
-			        <li class="#arraytoList(classes," ")#">Parameter ###x#<cfif StructKeyExists(thisParam, "sqlType")>(#thisParam.sqlType#)</cfif> = <cfif StructKeyExists(thisParam, "value")><span>#htmleditformat(thisParam.value)#</span> <cfset arrayAppend(cfdebugqueryparams,htmleditformat(thisParam.value)) />  </cfif></li>
-
+			        <li class="#arraytoList(classes," ")#">Parameter ###x#<cfif StructKeyExists(thisParam, "sqlType")>(#thisParam.sqlType#)</cfif> = <cfif StructKeyExists(thisParam, "value")><span>#htmleditformat(tostring(thisParam.value))#</span> <cfset arrayAppend(cfdebugqueryparams,htmleditformat(tostring(thisParam.value))) />  </cfif></li>
 			    </cfloop>
 			   </ul>
 			    <br />
