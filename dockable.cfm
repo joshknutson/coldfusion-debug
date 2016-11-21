@@ -35,7 +35,6 @@ setEncoding("URL", urlEncoding);
 
 	<!--- Load the debugging service's event table --->
 	<cfset qEvents = cfdebugger.getDebugger().getData()>
-
 	<!--- EVENT: SQL Queries --->
 	<cftry>
 	<cfquery dbType="query" name="cfdebug_queries" debug="false">
@@ -117,7 +116,7 @@ function CFDebugSerializable(variable)
 	
 	if(IsSimpleValue(variable))
 	{ 
-		ret = variable;
+		ret = encodeforhtml(variable);
 	}
 	else
 	{
@@ -194,7 +193,7 @@ function drawTree(tree, indent, id, highlightThreshold) {
     <cfset arraySort(keys,"text")>
     <cfloop index="x" from=1 to="#arrayLen(keys)#">
     	<cfset keyName = keys[x]>
-        <cfset retVal = retVal & '<tr><td class="label">#keyName#</td><td class="label">'>
+        <cfset retVal = retVal & '<tr><td class="label">#encodeforhtml(keyName)#</td><td class="label">'>
            <cftry>
     		    <cfset keyValue = CFDebugSerializable(scope[keyname])>
     		<cfcatch>
@@ -214,7 +213,7 @@ function drawTree(tree, indent, id, highlightThreshold) {
         document.write("<br><br><br><span style='background-color:9EB5D0;font-weight:bold;font-family:sans-serif;font-size:.8em;'><a href='javascript:setDebugSource();'>&nbsp; debug this page &nbsp;</a></span>");
         // write "docked debug panel" or "floating debug panel"
         if( top == self ) { // currently floating, issues if user is in frameset
-            document.write(" <a href='##' onClick='dockedMode(\"#getpageContext().getRequest().getContextPath()#/CFIDE/debug/cf_debugFr.cfm?userPage=#cgi.script_name#<cfif cgi.query_string NEQ "">?#cgi.query_string#</cfif>\");return false;' target='_top' style='background-color:DDDDD5;font-weight:bold;font-family:sans-serif;font-size:.8em;'>&nbsp; docked debug pane &nbsp;</a>");
+            document.write(" <a href='##' onClick='dockedMode(\"#getpageContext().getRequest().getContextPath()#/CFIDE/debug/cf_debugFr.cfm?userPage=#cgi.script_name#<cfif cgi.query_string NEQ "">?#encodeforurl(cgi.query_string)#</cfif>\");return false;' target='_top' style='background-color:DDDDD5;font-weight:bold;font-family:sans-serif;font-size:.8em;'>&nbsp; docked debug pane &nbsp;</a>");
         } else {
             document.write(" <a href='#cgi.script_name#' target='_top' style='background-color:DDDDD5;font-weight:bold;font-family:sans-serif;font-size:.8em;'>&nbsp; floating debug pane &nbsp;</a>");
         }
@@ -484,7 +483,7 @@ function clearTreeState() {
 <table border="0" cellpadding="0" cellspacing="0" bgcolor="white" width="100%">
 <tr bgcolor="003350">
 	<td height="25">&nbsp;</td>
-	<td colspan="2" width="300" nowrap><font class="label" style="color:C4D3E4;"><b>ColdFusion MX Debugging</b></font></td>
+	<td colspan="2" width="300" nowrap><font class="label" style="color:C4D3E4;"><b>ColdFusion Debugging</b></font></td>
 </tr>
 <tr><td colspan="3" height="7" background="#imageDir#homedivider.gif" width="100%"></td></tr>
 <!--- <tr><td colspan="3" height="1" bgcolor="999999"></td></tr>
@@ -504,7 +503,7 @@ function clearTreeState() {
         	<td nowrap><font class="label">&nbsp; Page &nbsp;</font></td>
         	<td nowrap class="color-row" width="100%"><font class="label">&nbsp; <a href="##" onClick="reloadUserPage();" 
         		onMouseOver="window.status='reload your page'; return true;" 
-        		onMouseOut="window.status=''; return true;">#cgi.script_name#<cfif cgi.query_string NEQ "">?#cgi.query_string#</cfif></a> &nbsp;</font></td>
+        		onMouseOut="window.status=''; return true;">#cgi.script_name#<cfif cgi.query_string NEQ "">?#encodeforurl(cgi.query_string)#</cfif></a> &nbsp;</font></td>
         </tr>
         <tr class="color-header">
         	<td nowrap><font class="label">&nbsp; Date &nbsp;</font></td>
@@ -514,7 +513,7 @@ function clearTreeState() {
         	<td colspan="2" height="30">
         		<table border="0" cellpadding="0" cellspacing="0"><tr>
         		<td nowrap><font class="label">&nbsp;&nbsp;</font></td>
-        		<td><input type="text" class="label" size="15" style="width:15em;" name="cf_debug_user_url" value="#cgi.script_name#<cfif cgi.query_string NEQ "">?#cgi.query_string#</cfif>"></td>
+        		<td><input type="text" class="label" size="15" style="width:15em;" name="cf_debug_user_url" value="#cgi.script_name#<cfif cgi.query_string NEQ "">?#encodeforurl(cgi.query_string)#</cfif>"></td>
         		<td nowrap><font class="label">&nbsp;&nbsp;</font></td>
         		<td><input type="button" name="btn_goToUrl" value="&nbsp; Go &nbsp;" onClick="goToUrl();" class="buttn"></td>
         		</tr></table>
@@ -576,8 +575,8 @@ function clearTreeState() {
             <td>
                 <table border=0 cellspacing=0 cellpadding=2>
                 <tr><td colspan="2" class="combined-crimson">#cfdebug_ex.template#(#cfdebug_ex.line#) @ #TimeFormat(cfdebug_ex.timestamp, "HH:mm:ss.lll")#</td></tr>
-                <tr><td class="label">type</td><td class="label">#cfdebug_ex.name#</td></tr>
-                <tr><td class="label">message</td><td class="label">#cfdebug_ex.message#</td></tr>
+                <tr><td class="label">type</td><td class="label">#encodeforhtml(cfdebug_ex.name)#</td></tr>
+                <tr><td class="label">message</td><td class="label">#encodeforhtml(cfdebug_ex.message)#</td></tr>
 <!---                 <tr><td class="label">detail</td><td class="label">error detail</td></tr>
                 <tr><td class="label">error_code</td><td class="label">error code corresponding to error thrown</td></tr>
                 <tr><td class="label">extended_info</td><td class="label">extended info such java stack trace</td></tr>
@@ -611,11 +610,11 @@ function clearTreeState() {
                 <!--- <tr><td class="label">#CGI.Script_Name#</td><td class="label">#DateFormat(Now())# #TimeFormat(Now())#</td></tr> --->
                 <tr><td class="label" nowrap height="18">current_locale &nbsp; &nbsp;</td><td class="label" nowrap>#GetLocale()#</td></tr>
                 <tr><td colspan=2 height="1" class="itemdivider"></td></tr>
-                <tr><td class="label" nowrap height="18">user_agent &nbsp; &nbsp;</td><td class="label" nowrap>#cgi.HTTP_USER_AGENT#</td></tr>
+                <tr><td class="label" nowrap height="18">user_agent &nbsp; &nbsp;</td><td class="label" nowrap>#encodeforhtml(cgi.HTTP_USER_AGENT)#</td></tr>
                 <tr><td colspan=2 height="1" class="itemdivider"></td></tr>
                 <tr><td class="label" nowrap height="18">remote_ip &nbsp; &nbsp;</td><td class="label" nowrap>#cgi.REMOTE_ADDR#</td></tr>
                 <tr><td colspan=2 height="1" class="itemdivider"></td></tr>
-                <tr><td class="label" nowrap height="18">host_name &nbsp; &nbsp;</td><td class="label" nowrap>#cgi.REMOTE_HOST#</td></tr>
+                <tr><td class="label" nowrap height="18">host_name &nbsp; &nbsp;</td><td class="label" nowrap>#encodeforhtml(cgi.REMOTE_HOST)#</td></tr>
                 </table>
             </td>
         </tr>
@@ -837,9 +836,9 @@ function clearTreeState() {
                 <table border=0 cellspacing=0 cellpadding=2 width="100%">
                 <tr><td colspan="2" class="combined-steelblue">#cfdebug_queries.template# @ #TimeFormat(cfdebug_queries.timestamp, "HH:mm:ss.lll")#</td></tr>
                  <tr><td colspan=2 height="1" class="itemdivider"></td></tr>
-				<tr><td class="label" nowrap height="18">name &nbsp; &nbsp;</td><td class="label" width="100%">#cfdebug_queries.name# <cfif cfdebug_queries.cachedquery>(Cached Query)</cfif></td></tr>
+				<tr><td class="label" nowrap height="18">name &nbsp; &nbsp;</td><td class="label" width="100%">#encodeforhtml(cfdebug_queries.name)# <cfif cfdebug_queries.cachedquery>(Cached Query)</cfif></td></tr>
                 <!--- <tr><td class="label">dsn</td><td class="label">???</td></tr> --->
-                <tr valign="top"><td class="label" nowrap height="18">statement &nbsp; &nbsp;</td><td class="label"><pre>#htmleditformat(cfdebug_queries.body)#</pre></td></tr>
+                <tr valign="top"><td class="label" nowrap height="18">statement &nbsp; &nbsp;</td><td class="label"><pre>#encodeforhtml(cfdebug_queries.body)#</pre></td></tr>
                 <tr><td class="label" nowrap height="18">datasource &nbsp; &nbsp;</td><td class="label">#cfdebug_queries.datasource#</td></tr>
                 <tr><td class="label" nowrap height="18">record count &nbsp; &nbsp;</td><td class="label">#cfdebug_queries.rowCount#</td></tr>
                 <tr><td class="label" nowrap height="18">execution time &nbsp; &nbsp;</td><td class="label">#Max(cfdebug_queries.executionTime, 0)#ms</td></tr>
@@ -863,7 +862,7 @@ function clearTreeState() {
                                     <tr>
                                         <td class="label">#x#</td>
                                         <td class="label">&nbsp;<cfif StructKeyExists(thisParam, "sqlType")>#thisParam.sqlType#</cfif></td>
-                                        <td class="label">&nbsp;<cfif StructKeyExists(thisParam, "value")>#htmleditformat(thisParam.value)#</cfif></td>
+                                        <td class="label">&nbsp;<cfif StructKeyExists(thisParam, "value")>#encodeforhtml(thisParam.value)#</cfif></td>
                                     </tr>
                                     </cfloop>
                                     </table>
@@ -940,9 +939,9 @@ function clearTreeState() {
                                     <tr>
                                         <td class="label">&nbsp;<cfif StructKeyExists(thisParam, "type")>#thisParam.type#</cfif></td>
                                         <td class="label">&nbsp;<cfif StructKeyExists(thisParam, "sqlType")>#thisParam.sqlType#</cfif></td>
-                                        <td class="label">&nbsp;<cfif StructKeyExists(thisParam, "value")>#thisParam.value#</cfif></td>
+                                        <td class="label">&nbsp;<cfif StructKeyExists(thisParam, "value")>#encodeforhtml(thisParam.value)#</cfif></td>
                                         <td class="label">&nbsp;<cfif StructKeyExists(thisParam, "variable")>#thisParam.variable# = #CFDebugSerializable(Evaluate(thisParam.variable))#</cfif></td>
-                                        <td class="label">&nbsp;<cfif StructKeyExists(thisParam, "dbVarName")>#thisParam.dbVarName#</cfif></td>
+                                        <td class="label">&nbsp;<cfif StructKeyExists(thisParam, "dbVarName")>#encodeforhtml(thisParam.dbVarName)#</cfif></td>
                                     </tr>
                                     </cfloop>
                                     </table>
@@ -1236,8 +1235,8 @@ function clearTreeState() {
                 <td width="16" nowrap>&nbsp;</td>
                 <td class="label">
 			    <cftry>
-			    	<img src='#getpageContext().getRequest().getContextPath()#/CFIDE/debug/images/#Replace(cfdebug_timer.priority, " ", "%20")#_16x16.gif' alt="#cfdebug_timer.priority# type">
-					 [#val(cfdebug_timer.endTime) - val(cfdebug_timer.startTime)#ms] <i>#cfdebug_timer.message#</i><br />
+			    	<img src='#getpageContext().getRequest().getContextPath()#/CFIDE/debug/images/#Replace(cfdebug_timer.priority, " ", "%20")#_16x16.gif' alt="#encodeforhtmlattribute(cfdebug_timer.priority)# type">
+					 [#val(cfdebug_timer.endTime) - val(cfdebug_timer.startTime)#ms] <i>#encodeforhtml(cfdebug_timer.message)#</i><br />
 			    	<cfcatch type="Any"></cfcatch>
 			    </cftry>
 				</td>
@@ -1270,12 +1269,12 @@ function clearTreeState() {
                 <td width="16" nowrap>&nbsp;</td>
                 <td>
                     <table border=0 cellspacing=0 cellpadding=2 width="100%">
-                    <tr><td colspan="2" class="combined-steelblue" nowrap><img src='#getpageContext().getRequest().getContextPath()#/CFIDE/debug/images/#Replace(cfdebug_trace.priority, " ", "%20")#_16x16.gif' alt="#cfdebug_trace.priority# type" align="left"> #cfdebug_trace.template#(#cfdebug_trace.line#) @ #TimeFormat(cfdebug_trace.timestamp, "HH:mm:ss.lll")#</td></tr>
+                    <tr><td colspan="2" class="combined-steelblue" nowrap><img src='#getpageContext().getRequest().getContextPath()#/CFIDE/debug/images/#encodeforurl(Replace(cfdebug_trace.priority, " ", "%20"))#_16x16.gif' alt="#encodeforhtmlattribute(cfdebug_trace.priority)# type" align="left"> #cfdebug_trace.template#(#cfdebug_trace.line#) @ #TimeFormat(cfdebug_trace.timestamp, "HH:mm:ss.lll")#</td></tr>
                     <tr><td colspan=2 height="1" class="itemdivider"></td></tr>
 					<tr><td class="label">request delta</td><td class="label">#deltaFromRequest# ms (<cfif firstTrace>1st trace<cfelse>#deltaFromLast# ms</cfif>)</td></tr>
-                    <cfif #cfdebug_trace.category# NEQ ""><tr><td class="label">category</td><td class="label">#cfdebug_trace.category#</td></tr></cfif>
-                    <cfif #cfdebug_trace.result# NEQ ""><tr><td class="label">variable</td><td class="label">#cfdebug_trace.result#</td></tr></cfif>
-                    <cfif #cfdebug_trace.message# NEQ ""><tr><td class="label">text</td><td class="label">#cfdebug_trace.message#</td></tr></cfif>
+                    <cfif #cfdebug_trace.category# NEQ ""><tr><td class="label">category</td><td class="label">#encodeforhtml(cfdebug_trace.category)#</td></tr></cfif>
+                    <cfif #cfdebug_trace.result# NEQ ""><tr><td class="label">variable</td><td class="label">#encodeforhtml(cfdebug_trace.result)#</td></tr></cfif>
+                    <cfif #cfdebug_trace.message# NEQ ""><tr><td class="label">text</td><td class="label">#encodeforhtml(cfdebug_trace.message)#</td></tr></cfif>
                     <tr><td colspan=2 height="1" class="itemdivider"></td></tr>
 					</table>
                 </td>
