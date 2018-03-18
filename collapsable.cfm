@@ -1,6 +1,7 @@
 <cfif IsDebugMode()>
 	<cfsilent>
 		<cfset startTime = getTickCount()>
+		<cfset topdoc64 = "data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDYwIDYwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA2MCA2MDsiIHhtbDpzcGFjZT0icHJlc2VydmUiIHdpZHRoPSIxNnB4IiBoZWlnaHQ9IjE2cHgiPgo8Zz4KCTxwYXRoIGQ9Ik00Mi41LDIyaC0yNWMtMC41NTIsMC0xLDAuNDQ3LTEsMXMwLjQ0OCwxLDEsMWgyNWMwLjU1MiwwLDEtMC40NDcsMS0xUzQzLjA1MiwyMiw0Mi41LDIyeiIgZmlsbD0iIzAwMDAwMCIvPgoJPHBhdGggZD0iTTE3LjUsMTZoMTBjMC41NTIsMCwxLTAuNDQ3LDEtMXMtMC40NDgtMS0xLTFoLTEwYy0wLjU1MiwwLTEsMC40NDctMSwxUzE2Ljk0OCwxNiwxNy41LDE2eiIgZmlsbD0iIzAwMDAwMCIvPgoJPHBhdGggZD0iTTQyLjUsMzBoLTI1Yy0wLjU1MiwwLTEsMC40NDctMSwxczAuNDQ4LDEsMSwxaDI1YzAuNTUyLDAsMS0wLjQ0NywxLTFTNDMuMDUyLDMwLDQyLjUsMzB6IiBmaWxsPSIjMDAwMDAwIi8+Cgk8cGF0aCBkPSJNNDIuNSwzOGgtMjVjLTAuNTUyLDAtMSwwLjQ0Ny0xLDFzMC40NDgsMSwxLDFoMjVjMC41NTIsMCwxLTAuNDQ3LDEtMVM0My4wNTIsMzgsNDIuNSwzOHoiIGZpbGw9IiMwMDAwMDAiLz4KCTxwYXRoIGQ9Ik00Mi41LDQ2aC0yNWMtMC41NTIsMC0xLDAuNDQ3LTEsMXMwLjQ0OCwxLDEsMWgyNWMwLjU1MiwwLDEtMC40NDcsMS0xUzQzLjA1Miw0Niw0Mi41LDQ2eiIgZmlsbD0iIzAwMDAwMCIvPgoJPHBhdGggZD0iTTM4LjkxNCwwSDYuNXY2MGg0N1YxNC41ODZMMzguOTE0LDB6IE0zOS41LDMuNDE0TDUwLjA4NiwxNEgzOS41VjMuNDE0eiBNOC41LDU4VjJoMjl2MTRoMTR2NDJIOC41eiIgZmlsbD0iIzAwMDAwMCIvPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+Cjwvc3ZnPgo=" />
 		<cfscript>
 			formEncoding = getEncoding("FORM");
 			urlEncoding = getEncoding("URL");
@@ -214,7 +215,7 @@ div#CFDdebugPanel{font-family:Arial,Helvetica,sans-serif; clear:both; font-size:
 #CFDinfo div{clear:right; height:20px}
 .CFDrenderTime{margin-top:20px; margin-bottom:20px; font-weight:bold; font-style:italic}
 .CFDdebugTables{font-size:11px; border:1px outset #93C2FF; background:#eee; width:99%;margin-bottom:0.5em;margin-top:0.1em}
-.CFDdebugTables th{font-size:11px; background:#CFE9FF; font-weight:bold; padding:5px; text-align:center; color:#000}
+.CFDdebugTables th{font-size:11px; background:#CFE9FF; font-weight:bold; padding:5px; text-align:center; color:#000;cursor:pointer}
 .CFDdebugTables tr{background-color:#fff}
 .CFDdebugTables tr:hover{background-color:#FEFFAF}
 .CFDdebugTables td{padding:5px; font-size:11px}
@@ -239,6 +240,7 @@ ul.cfdebugqueryparams li span{color:blue}
 .CFDdebugTables tr:nth-child(even):hover{background-color:#FEFFAF}
 span.CFDdebugLoader{background:url(//raw.github.com/joshknutson/coldfusion-debug/master/assets/images/loading.gif) no-repeat; padding-left:20px}
 @media print {div#CFDdebugPanel{display:none;}}
+.CFDdebugTables th:hover::after{color:inherit;content:" \025B8"}.CFDdebugTables th::after{color:transparent;content:" \025B8"}.CFDdebugTables th.dir-down{color:#000}.CFDdebugTables th.dir-down::after{color:inherit;content:" \025BE"}.CFDdebugTables th.dir-up{color:#000}.CFDdebugTables th.dir-up::after{color:inherit;content:" \025B4"}
 </style>
 <script>
 function CFDtoggle(divid){if(document.getElementById(divid).className=="CFDdebugContent closed ui-widget-content panel-body"){document.getElementById(divid).className="CFDdebugContent open ui-widget-content panel-body";setCookie(divid,1);}else{document.getElementById(divid).className="CFDdebugContent closed ui-widget-content panel-body";setCookie(divid,0);}}
@@ -246,6 +248,9 @@ function setCookie(c_name,value){var expiredays=30;var exdate=new Date();exdate.
 function addState(){var lis=document.getElementById("CFDdebugPanel").getElementsByTagName("H3");for(var i=0;i<lis.length;i++){lis[i].onmouseover=function(){this.className+=" cfd-default-highlight ui-state-highlight";};lis[i].onmouseout=function(){this.className=this.className.replace(new RegExp("cfd-default-highlight\\b"),"").replace(new RegExp("ui-state-highlight\\b"),"");}};}
 function addLoadEvent(func){var oldonload=window.onload;if(typeof window.onload!='function'){window.onload=func;}else{window.onload=function(){if(oldonload){oldonload();}func();}}};addLoadEvent(addState);
 try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',function(event){var loadingText = '<span class="CFDdebugLoader">Loading..</span>';jQuery('#reloadJax').html(loadingText);jQuery.get("<cfoutput>#currentaddress#</cfoutput>", function(data){ jQuery('#reloadJax').text('AJAX Reinitialize');});event.preventDefault();});function addReload(){	var vhtml = '<a href="<cfoutput>#currentaddress#</cfoutput>"  class="CFDdebugButton ui-state-default ui-corner-all" title="AJAX Reinitialize" id="reloadJax">AJAX Reinitialize</a>';jQuery('#jaxReload').html(vhtml)};addLoadEvent(addReload);}}catch(err){}
+/*https://github.com/tofsjonas/sortable*/
+(function(){var g=/\bCFDdebugTables\b/;document.addEventListener("click",function(d){var c=d.target;if("TH"==c.nodeName){var a=c.parentNode;d=a.parentNode.parentNode;if(g.test(d.className)){var e,b=a.cells;for(a=0;a<b.length;a++)b[a]===c?e=a:b[a].className=b[a].className.replace(" dir-down","").replace(" dir-up","");b=c.className;a=" dir-down";-1==b.indexOf(" dir-down")?b=b.replace(" dir-up","")+" dir-down":(a=" dir-up",b=b.replace(" dir-down","")+" dir-up");c.className=b;c=d.tBodies[0];b=[].slice.call(c.cloneNode(!0).rows,
+0);var h=" dir-up"==a;b.sort(function(a,b){a=a.cells[e].innerText;b=b.cells[e].innerText;if(h){var c=a;a=b;b=c}return isNaN(a-b)?a.localeCompare(b):a-b});var f=c.cloneNode();for(a=0;a<b.length;a++)f.appendChild(b[a]);d.replaceChild(f,c)}}})})();
 </script>
 <div id="CFDdebugPanel" aria-hidden="true">
 <cfif bGeneral>
@@ -297,8 +302,6 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 
 <!--- Template Stack and Executions Times --->
 <cfif bFoundTemplates>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/sortable/0.6.0/js/sortable.min.js" defer></script>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sortable/0.6.0/css/sortable-theme-minimal.css" />
   	<!--- Total Execution Time of all top level pages --->
   	<cfquery dbType="query" name="cfdebug_execution" debug="false">
       	SELECT (endTime - startTime) AS executionTime
@@ -460,7 +463,7 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 	                order by totalExecutionTime DESC
                 </cfquery>
                 <cfoutput>
-                <table class="CFDdebugTables" data-sortable>
+                <table class="CFDdebugTables">
 					<caption class="cfdTextLeft"><span class="CFDtemplate_overage">red = over #cfdebugger.settings.template_highlight_minimum# ms average execution time</span></caption>
 					<thead>
 					  <tr>
@@ -478,8 +481,8 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 							 <cfset templateOutput = htmleditFormat(template)>
 	                        <cfset templateAverageTime = Round(totalExecutionTime / instances)>
 
-	                        <cfif template EQ ExpandPath(cgi.script_name)>
-	                            <cfset templateOutput = "<img src='#getpageContext().getRequest().getContextPath()#/CFIDE/debug/images/topdoc.gif' height='13px' width='11px' alt='top level' border='0'> " &
+							<cfif template EQ ExpandPath(cgi.script_name)>
+	                            <cfset templateOutput = "<img src='#topdoc64#' height='13px' width='11px' alt='top level' border='0'> " &
 	                                "<strong>" & htmleditFormat(template) & "</strong>">
 								 <cfif templateAverageTime GT cfdebugger.settings.template_highlight_minimum>
 	                                <cfset templateOutput = "<span class='CFDtemplate_overage'>" & htmleditFormat(template) & "</span>">
@@ -589,7 +592,7 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 <div class="ui-widget panel panel-info">
 	<h3 class="cfd-default-header ui-widget-header panel-heading" onclick="CFDtoggle('CFDcfc')">&##9654; CFC Data</h3>
 	<div class="CFDdebugContent <cfif structkeyexists(cookie,"CFDcfc") and cookie.CFDcfc>open<cfelse>closed</cfif> ui-widget-content panel-body" id="CFDcfc">
-		<table class="CFDdebugTables" data-sortable>
+		<table class="CFDdebugTables">
 		<thead>
 			<tr>
 				<th>Total Time (ms)</th>
@@ -1000,9 +1003,9 @@ function drawTree(tree, indent, id, highlightThreshold) {
 	    // top level nodes (application.cfm,cgi.script_name,etc) have a -1 parent line number
 	    if(tree[id].line EQ -1) {
 			if( Tree[id].duration GT highlightThreshold ){
-	        	writeoutput( "<img src='#getpageContext().getRequest().getContextPath()#/CFIDE/debug/images/topdoc.gif' height='13px' width='11px' alt='top level' border='0'> " & "<span class='CFDCFDtemplate_overage'><strong>(#Tree[id].duration#ms) " & Tree[id].template & "</strong></span><br />" );
+	        	writeoutput( "<img src='#topdoc64#' height='13px' width='11px' alt='top level' border='0'> " & "<span class='CFDCFDtemplate_overage'><strong>(#Tree[id].duration#ms) " & Tree[id].template & "</strong></span><br />" );
 			}else{
-				writeoutput( "<img src='#getpageContext().getRequest().getContextPath()#/CFIDE/debug/images/topdoc.gif' height='13px' width='11px' alt='top level' border='0'> " & "<span class='template'><strong>(#Tree[id].duration#ms) " & Tree[id].template & "</strong></span><br />" );
+				writeoutput( "<img src='#topdoc64#' height='13px' width='11px' alt='top level' border='0'> " & "<span class='template'><strong>(#Tree[id].duration#ms) " & Tree[id].template & "</strong></span><br />" );
 			}
 	    } else {
 	        if( Tree[id].duration GT highlightThreshold ) {
