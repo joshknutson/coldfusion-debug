@@ -836,7 +836,7 @@ try{if(typeof jQuery  == 'function'){jQuery('#reloadJax').delegate('click',funct
 		<p class="cfdebug">
 		<cfloop query="cfdebug_timer">
 		    <cftry>
-		    	<img src='#getpageContext().getRequest().getContextPath()#/CFIDE/debug/images/#Replace(cfdebug_timer.priority, " ", "%20")#_16x16.gif' alt="#cfdebug_timer.priority# type">
+		    	 <span title="#cfdebug_timer.priority# type">-</span>
 				 [#val(cfdebug_timer.endTime) - val(cfdebug_timer.startTime)#ms] <em>#cfdebug_timer.message#</em><br />
 		    	<cfcatch type="Any"></cfcatch>
 		    </cftry>
